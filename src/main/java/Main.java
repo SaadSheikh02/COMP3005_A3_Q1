@@ -12,7 +12,9 @@ public class Main {
             connection = DriverManager.getConnection(url, user, password);
             if(connection != null){
                 System.out.println("Connected to the Database");
-                getAllStudents();
+                //getAllStudents();
+                // date format: YYYY/MM/DD
+                addStudent("Saad", "Sheikh", "saad1662002@gmail.com", Date.valueOf("2021-09-08"));
             }
             else {
                 System.out.println("Failed to connect to the database");
@@ -20,6 +22,22 @@ public class Main {
 
         }
         catch (Exception e){}
+    }
+
+    private static void addStudent(String first_name, String last_name, String email, Date enrollment_date) throws SQLException {
+        String sql_statement = "INSERT INTO students (first_name, last_name, email, enrollment_date) VALUES (?, ?, ?, ?)";
+
+        try {
+            PreparedStatement prepStatement = connection.prepareStatement(sql_statement);
+            prepStatement.setString(1, first_name);
+            prepStatement.setString(2, last_name);
+            prepStatement.setString(3, email);
+            prepStatement.setDate(4, new java.sql.Date(enrollment_date.getTime()));
+            prepStatement.executeUpdate();
+            getAllStudents();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private static void getAllStudents() {

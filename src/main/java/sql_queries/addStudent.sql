@@ -1,0 +1,1 @@
+INSERT INTO students (first_name, last_name, email, enrollment_date) VALUES ('Saad', 'Sheikh', 'saad1662002@gmail.com', '2021-09-08')
