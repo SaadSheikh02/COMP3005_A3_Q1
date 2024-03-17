@@ -1,0 +1,1 @@
+UPDATE students SET email = 'saad1662002@gmail.com' WHERE student_id = '4';

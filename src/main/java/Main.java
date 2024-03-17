@@ -14,7 +14,8 @@ public class Main {
                 System.out.println("Connected to the Database");
                 //getAllStudents();
                 // date format: YYYY/MM/DD
-                addStudent("Saad", "Sheikh", "saad1662002@gmail.com", Date.valueOf("2021-09-08"));
+                //addStudent("Saad", "Sheikh", "saad1662002@gmail.com", Date.valueOf("2021-09-08"));
+                //updateStudentEmail(4, "saad2773113@gmail.com");
             }
             else {
                 System.out.println("Failed to connect to the database");
@@ -22,6 +23,26 @@ public class Main {
 
         }
         catch (Exception e){}
+    }
+
+    private static void updateStudentEmail(int student_id, String email) {
+        String sql_statement = "UPDATE students SET email = ? WHERE student_id = ?";
+
+        try{
+            System.out.println("\n BEFORE UPDATE: ");
+            getAllStudents();
+            System.out.println();
+
+            PreparedStatement prepStatement = connection.prepareStatement(sql_statement);
+            prepStatement.setString(1, email);
+            prepStatement.setInt(2, student_id);
+            prepStatement.executeUpdate();
+
+            System.out.println("\n AFTER UPDATE: ");
+            getAllStudents();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private static void addStudent(String first_name, String last_name, String email, Date enrollment_date) throws SQLException {
