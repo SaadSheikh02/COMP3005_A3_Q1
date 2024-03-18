@@ -1,22 +1,50 @@
 import java.sql.*;
+import java.util.Scanner;
 
 public class Main {
     static Connection connection;
+    static Scanner input;
     public static void main(String[] args) {
         String url = "jdbc:postgresql://localhost:1433/university"; // change url accordingly
         String user = "postgres";
         String password = "50551591"; // change password accordingly
+        input = new Scanner(System.in);
 
         try{
             Class.forName("org.postgresql.Driver");
             connection = DriverManager.getConnection(url, user, password);
             if(connection != null){
                 System.out.println("Connected to the Database");
-                getAllStudents();
-                // date format: YYYY/MM/DD
-                addStudent("Saad", "Sheikh", "saad1662002@gmail.com", Date.valueOf("2021-09-08"));
-                updateStudentEmail(4, "saad2773113@gmail.com");
-                deleteStudent(7);
+                while(true){
+                    int menuChoice = outputChoices();
+
+                    if(menuChoice == 1){
+                        getAllStudents();
+
+                    }
+                    else if(menuChoice == 2){
+                        // date format: YYYY/MM/DD
+                        String f_name = getFirstName();
+                        String l_name = getLastName();
+                        String s_email = getEmail();
+                        Date e_date = Date.valueOf(getEnrollmentDate());
+                        addStudent(f_name, l_name, s_email, e_date);
+                    }
+                    else if(menuChoice == 3){
+                        int student_id = getStudentID();
+                        String student_email = getNewEmail();
+                        updateStudentEmail(student_id, student_email);
+
+                    }
+                    else if(menuChoice == 4){
+                        int student_id = getStudentID();
+                        deleteStudent(student_id);
+                    }
+                    else if(menuChoice == 5){
+                        System.exit(0);
+                    }
+
+                }
             }
             else {
                 System.out.println("Failed to connect to the database");
@@ -24,6 +52,53 @@ public class Main {
 
         }
         catch (Exception e){}
+    }
+
+    private static int outputChoices() {
+        System.out.println();
+        System.out.println("Options: ");
+        System.out.println("1) Get all students");
+        System.out.println("2) Add a student");
+        System.out.println("3) Update student email");
+        System.out.println("4) Delete a student");
+        System.out.println("5) Exit the program");
+        System.out.println();
+        System.out.println("Enter the number of your choice: ");
+        int choice = input.nextInt();
+        input.nextLine();
+        return choice;
+    }
+
+    private static String getFirstName() {
+        System.out.println("Enter first name: ");
+        return input.nextLine();
+    }
+
+    private static String getLastName() {
+        System.out.println("Enter last name: ");
+        return input.nextLine();
+    }
+
+    private static String getEmail() {
+        System.out.println("Enter student email: ");
+        return input.nextLine();
+    }
+
+    private static String getEnrollmentDate() {
+        System.out.println("Enter enrollment date (YYYY-MM-DD): ");
+        return input.nextLine();
+    }
+
+    private static int getStudentID() {
+        System.out.print("Enter student ID: ");
+        int id = input.nextInt();
+        input.nextLine();
+        return id;
+    }
+
+    private static String getNewEmail() {
+        System.out.println("Enter student's new email: ");
+        return input.nextLine();
     }
 
     /**
