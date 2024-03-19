@@ -107,7 +107,8 @@ public class Main {
         try {
             Date parsedDate = expectedFormat.parse(actual_date);
 
-            if (new Date().before(parsedDate)){
+            Date currDate = new Date();
+            if (currDate.before(parsedDate) || currDate.equals(parsedDate)){
                 System.out.println("Date cannot be past the current date");
                 return null;
             }
