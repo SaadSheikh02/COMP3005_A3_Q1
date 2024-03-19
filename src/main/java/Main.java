@@ -1,4 +1,7 @@
 import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 
 public class Main {
@@ -27,8 +30,16 @@ public class Main {
                         String f_name = getFirstName();
                         String l_name = getLastName();
                         String s_email = getEmail();
-                        Date e_date = Date.valueOf(getEnrollmentDate());
-                        addStudent(f_name, l_name, s_email, e_date);
+                        String getEnrollmentDateInStringFormat = getEnrollmentDate();
+                        if(getEnrollmentDateInStringFormat != null){
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                            try{
+                                Date e_date = dateFormat.parse(getEnrollmentDateInStringFormat);
+                                addStudent(f_name, l_name, s_email, e_date);
+                            } catch (ParseException | SQLException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
                     }
                     else if(menuChoice == 3){
                         int student_id = getStudentID();
@@ -51,7 +62,9 @@ public class Main {
             }
 
         }
-        catch (Exception e){}
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private static int outputChoices() {
@@ -86,7 +99,24 @@ public class Main {
 
     private static String getEnrollmentDate() {
         System.out.println("Enter enrollment date (YYYY-MM-DD): ");
-        return input.nextLine();
+        String actual_date = input.nextLine();
+
+        SimpleDateFormat expectedFormat = new SimpleDateFormat("yyyy-MM-dd");
+        expectedFormat.setLenient(false);
+
+        try {
+            Date parsedDate = expectedFormat.parse(actual_date);
+
+            if (new Date().before(parsedDate)){
+                System.out.println("Date cannot be past the current date");
+                return null;
+            }
+
+            return actual_date;
+        } catch (ParseException e) {
+            System.out.println("Invalid date or date format.");
+            return null;
+        }
     }
 
     private static int getStudentID() {
